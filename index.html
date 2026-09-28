@@ -59,9 +59,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 .polaroid::before{top:-12px;left:-24px;transform:rotate(-35deg)}
 .polaroid::after{bottom:-10px;right:-24px;transform:rotate(-35deg)}
 .msg{background:#fff;border-radius:22px;padding:28px;font-size:19px;color:#4b6470;text-align:left;box-shadow:0 14px 40px rgba(31,58,68,.09);white-space:pre-wrap}
-.minis{display:flex;gap:16px;justify-content:center;margin-top:34px}
-.minis img{width:96px;height:96px;object-fit:cover;background:#fff;padding:6px;box-shadow:0 6px 16px rgba(31,58,68,.12)}
-.minis img:nth-child(2){transform:translateY(8px) rotate(2deg)}
+.minis{display:flex;gap:22px;justify-content:center;margin-top:48px}
+.minis img{width:200px;height:200px;object-fit:cover;background:#fff;padding:8px;box-shadow:0 6px 16px rgba(31,58,68,.12)}
+.minis img:nth-child(2){transform:translateY(10px) rotate(2deg)}
 .wall{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
 .flip{aspect-ratio:3/4;perspective:900px;background:none;padding:0;position:relative}
 .flip>div{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
@@ -93,8 +93,49 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 #qr{display:flex;justify-content:center;margin:16px 0}
 .link{margin:10px 0 16px;padding:10px;background:var(--bg);border-radius:12px;word-break:break-all;font-size:13px}
 .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-@media(max-width:700px){.hero{grid-template-columns:1fr}.wall{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.wall{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}.minis{gap:10px}.minis img{width:29vw;height:29vw;padding:5px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* player */
+.player{display:flex;gap:18px;align-items:center;background:#fff;border-radius:26px;padding:16px 22px 16px 16px;box-shadow:0 14px 40px rgba(31,58,68,.09);max-width:560px;margin:34px auto 0;text-align:left}
+.player img{width:96px;height:96px;object-fit:cover;border-radius:16px;flex:none}
+.pm{flex:1;min-width:0}
+.now{font-size:12px;letter-spacing:.2em;color:var(--peach);font-weight:600}
+.pm h3{font-family:Fraunces,serif;font-size:24px;margin:2px 0}
+.pm small{color:var(--mut);font-size:15px}
+.ctl{display:flex;align-items:center;gap:12px;margin-top:10px}
+.play{width:46px;height:46px;border-radius:50%;background:var(--teal);color:#fff;font-size:15px;flex:none}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--mint);cursor:pointer;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--teal)}
+.tm{font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hint{font-size:24px;margin-top:16px}
+.albumBtn{margin-top:22px}
+/* certificate */
+.cert{position:relative;background:#fffdf6;border-radius:8px;padding:12px;box-shadow:0 18px 50px rgba(31,58,68,.14);transform:rotate(-.6deg);margin-top:26px}
+.cert-in{border:3px double var(--gold);padding:30px 20px 26px;position:relative}
+.cert .k{font-size:12px;letter-spacing:.3em;color:var(--peach);font-weight:600}
+.cert h2{font-size:clamp(26px,6vw,38px);margin:6px 0}
+.cert .who{font-family:Caveat;font-size:clamp(34px,9vw,50px);color:var(--teal-d);border-bottom:2px dashed var(--teal);display:inline-block;padding:0 14px;margin:4px 0;max-width:100%;word-break:break-word}
+.cph{width:130px;height:130px;margin:18px auto 6px;border-radius:50%;border:5px solid #fff;box-shadow:0 8px 20px rgba(31,58,68,.18),0 0 0 3px var(--gold);object-fit:cover;display:block}
+.terms{list-style:none;padding:0;text-align:left;max-width:520px;margin:14px auto 0;font-size:16px}
+.terms li{padding:9px 0 9px 32px;position:relative;border-bottom:1px dotted var(--line)}
+.terms li::before{content:"✿";position:absolute;left:6px;color:var(--teal)}
+.sigs{display:flex;gap:18px;margin-top:24px}
+.sigs div{flex:1;min-width:0}
+.sigs b{display:block;font-family:Caveat;font-size:30px;font-weight:600;color:var(--teal-d);border-bottom:2px solid var(--ink);line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+.sigs small{font-size:12px;color:var(--mut)}
+.seal{position:absolute;right:10px;top:10px;width:62px;height:62px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-weight:700;font-size:11px;letter-spacing:.05em;transform:rotate(12deg);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--gold);text-align:center;line-height:1.1}
+/* letter with pinned photos */
+.letter2{position:relative;margin-top:44px}
+.note{--lh:40px;position:relative;margin-top:0;padding:120px 28px 140px 40px;line-height:var(--lh);background:#fff repeating-linear-gradient(#fff 0 calc(var(--lh) - 1px),#e3eeea calc(var(--lh) - 1px) var(--lh))}
+.pp{position:absolute;width:min(30vw,132px);background:#fff;padding:6px 6px 20px;box-shadow:0 8px 20px rgba(31,58,68,.22);z-index:2}
+.pp img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.pp::before{content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--gold);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.pa{top:-24px;left:-8px;transform:rotate(-7deg)}
+.pb{top:-16px;right:-8px;transform:rotate(6deg)}
+.pc{bottom:-22px;right:16px;transform:rotate(-4deg)}
+@media(max-width:700px){.player{padding:12px;gap:12px}.player img{width:72px;height:72px}.pm h3{font-size:20px}.pm small{font-size:14px}.play{width:40px;height:40px}.tm{font-size:12px}
+.note{--lh:32px;font-size:22px;padding:112px 20px 132px 24px}.note .sig{font-size:30px}.letter2{margin-left:6px;margin-right:6px}.cert-in{padding:26px 14px 22px}.seal{width:52px;height:52px;font-size:9px}}
 </style>
 </head>
 <body>
@@ -144,6 +185,16 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
     <div class="msg" id="vMsg"></div>
   </div>
   <div class="minis" id="minis"></div>
+  <div class="player">
+    <img id="pArt" alt="">
+    <div class="pm">
+      <div class="now">NOW PLAYING</div>
+      <h3>Our Song</h3><small>the one that's ours</small>
+      <div class="ctl"><button class="play" id="pplay" aria-label="Play or pause">▶</button><div class="bar" id="pbar"><i id="pfill"></i></div><span class="tm" id="ptime">0:00 / 0:00</span></div>
+    </div>
+  </div>
+  <p class="hand hint">press play — this one is permanently attached to memories of you ✿</p>
+  <button class="btn albumBtn" id="albumBtn">see our album →</button>
 </div></section>
 
 <section id="pg3" class="page hidden"><div class="sec">
@@ -153,10 +204,35 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
   <div class="wall" id="wall"></div>
 </div></section>
 
-<section id="pg4" class="page hidden"><div class="sec" style="max-width:700px">
+<section id="pg4" class="page hidden"><div class="sec" style="max-width:640px">
+  <p class="eyebrow">OFFICIALLY OFFICIAL</p>
+  <h2 class="title sub">the boyfriend certificate</h2>
+  <div class="cert"><div class="cert-in">
+    <div class="seal">OFFICIAL<br>SEAL</div>
+    <p class="k">CERTIFICATE OF BOYFRIENDSHIP</p>
+    <h2>Certified Boyfriend</h2>
+    <p>This is to certify that</p>
+    <div class="who" id="cWho"></div>
+    <img class="cph" id="cPh" alt="">
+    <p>is hereby the one and only official boyfriend, with these lifelong duties:</p>
+    <ul class="terms">
+      <li><b>Chief Banter Officer.</b> Fully responsible for my fun banter. Always. No off days, no "I'm tired".</li>
+      <li><b>Always there for me.</b> Replies, rants, random 2am thoughts. All covered.</li>
+      <li><b>Laughs at my jokes.</b> Even the bad ones. Especially the bad ones.</li>
+      <li><b>Snack policy.</b> Shares the good fries. No exceptions.</li>
+      <li><b>Terms:</b> valid forever, non-refundable, non-transferable.</li>
+    </ul>
+    <div class="sigs"><div><b id="cFrom"></b><small>issued by</small></div><div><b>the cat</b><small>official witness</small></div></div>
+  </div></div>
+</div></section>
+
+<section id="pg5" class="page hidden"><div class="sec" style="max-width:700px">
   <p class="hand" style="font-size:24px">✿ one last thing ✿</p>
   <h2 class="title sub">A Note For You</h2>
-  <div class="note" id="note"></div>
+  <div class="letter2">
+    <div class="pp pa"><img id="lp0" alt=""></div><div class="pp pb"><img id="lp1" alt=""></div><div class="pp pc"><img id="lp2" alt=""></div>
+    <div class="note" id="note"></div>
+  </div>
   <div class="genbox hidden" id="genbox">
     <button class="btn" id="genBtn">Generate QR &amp; link</button>
     <p>Happy with it? This creates the link you'll send him.</p>
@@ -165,7 +241,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 
 <nav id="nav" class="hidden">
   <button class="btn ghost nv" id="back">← Back</button>
-  <div id="dots"><i></i><i></i><i></i><i></i></div>
+  <div id="dots"><i></i><i></i><i></i><i></i><i></i></div>
   <button class="btn nv" id="next">Next →</button>
 </nav>
 
@@ -197,6 +273,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
   </div>
 </div>
 
+<audio id="aud" src="song.mp3" preload="auto" loop></audio>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
@@ -214,7 +291,13 @@ const DEF = [
   G+"Y2lkPTc5MGI3NjExNTV5MDhpejY0eHowZG1oYmk0eW15cG5rODEwb3Q2MnQ3NXQ0ajhucCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yUThmGwfT1hrORu84T/giphy.gif",
   G+"Y2lkPTc5MGI3NjExdDA3Yjk0dGNxMGFqcjkyaGg3ZGR1dWIybTNvdDJmZTl3cHptOTBndCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VKrjhp2D8pw6zjVsnD/giphy.gif"
 ];
-const BACKS = ["day one energy. we had no idea what was coming.","still one of the funniest nights of my life.","nothing happened this day. that was the best part."];
+const MINI_GIFS = [
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ2dTFuNDRqcWxmMDV6ejZ6MHg5MTlqcG9uYm0wN2lkd2wwN2s3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QO6gybBh0d4LLTNn1d/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ2dTFuNDRqcWxmMDV6ejZ6MHg5MTlqcG9uYm0wN2lkd2wwN2s3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ey9c4OTwlZWCuVafkZ/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ2dTFuNDRqcWxmMDV6ejZ6MHg5MTlqcG9uYm0wN2lkd2wwN2s3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/tAnKxPsuWqmuBuHD0Y/giphy.gif"
+];
+const P = [1,2,3,4,5,6].map(i=>`p${i}.jpeg`);
+const BACKS = ["the day you became my favourite notification.","this smile is still my weakness.","we were being idiots and it was perfect.","you make boring days feel like weekends.","i'd pick you again. every single time.","to be continued... forever ✿"];
 
 const $ = i => document.getElementById(i);
 const esc = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -228,21 +311,22 @@ let step = first, D = null, price = PRICE, code = "", pending = null;
 /* ---------- NAVIGATION ---------- */
 function show(n, push=true){
   step = n;
-  for(let i=0;i<5;i++) $("pg"+i).classList.toggle("hidden", i!==n);
+  for(let i=0;i<6;i++) $("pg"+i).classList.toggle("hidden", i!==n);
   $("nav").classList.toggle("hidden", n<1);
   $("back").classList.toggle("show", n>first);
-  $("next").classList.toggle("show", n>=1 && n<4);
+  $("next").classList.toggle("show", n>=1 && n<5);
   $("next").textContent = n===1 ? "Open ✉" : "Next →";
   document.querySelectorAll("#dots i").forEach((d,i)=>d.classList.toggle("on", i===n-1));
   $("genbox").classList.toggle("hidden", mode!=="create");
   window.scrollTo(0,0);
   if(push) history.pushState({n},"",location.search+"#s"+n);
 }
-const go = d => { const n=step+d; if(n>=first && n<=4 && (n>=1||mode==="create")) show(n); };
+const go = d => { const n=step+d; if(n>=first && n<=5 && (n>=1||mode==="create")) show(n); };
 window.addEventListener("popstate", e => { const n = e.state?.n ?? first; show(D||n===0 ? n : first, false); });
 $("back").onclick = () => history.length>1 && history.state && history.state.n>first ? history.back() : go(-1);
-$("next").onclick = () => go(1);
-$("pg1").onclick = () => go(1);
+const aud = $("aud"), playSong = () => aud.play().catch(()=>{});
+$("next").onclick = () => { if(step===1) playSong(); go(1); };
+$("pg1").onclick = () => { playSong(); go(1); };
 document.addEventListener("keydown", e => {
   if($("modal").classList.contains("hidden") && step>=1 && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){
     if(e.key==="ArrowRight") go(1); if(e.key==="ArrowLeft") go(-1);
@@ -257,11 +341,27 @@ function render(d){
   $("vTitle").textContent = `To ${d.receiver}`;
   $("vRibbon").textContent = `from ${d.sender} ✿`;
   $("vMsg").textContent = d.message;
-  $("minis").innerHTML = ph.map(u=>`<img src="${esc(u)}" alt="">`).join("");
-  $("wall").innerHTML = ph.map((u,i)=>`<button class="flip" aria-label="Flip photo ${i+1}"><span class="pin"></span><div><figure><img src="${esc(u)}" alt=""></figure><div class="back">${BACKS[i]}</div></div></button>`).join("");
+  $("minis").innerHTML = MINI_GIFS.map(u=>`<img src="${esc(u)}" alt="">`).join("");
+  $("wall").innerHTML = P.map((u,i)=>`<button class="flip" aria-label="Flip photo ${i+1}"><span class="pin"></span><div><figure><img src="${esc(u)}" alt=""></figure><div class="back">${BACKS[i]}</div></div></button>`).join("");
   document.querySelectorAll(".flip").forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle("on");});
+  $("pArt").src = MINI_GIFS[0];
+  $("cWho").textContent = d.receiver; $("cFrom").textContent = d.sender; $("cPh").src = ph[0];
+  [0,1,2].forEach(i=>$("lp"+i).src = ph[i]);
   $("note").innerHTML = `Hey ${esc(d.receiver)},\n\nI'm not great at saying this stuff out loud, so I made you a page instead.\n\nI hope today is a good one. And I hope you know that whatever happens next, you've got a person in your corner permanently. That's me.\n\nalways in your corner,\n<span class="sig">${esc(d.sender)}</span>`;
 }
+
+/* ---------- MUSIC PLAYER ---------- */
+const fmt = t => isFinite(t) ? Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0") : "0:00";
+const syncBtn = () => { $("pplay").textContent = aud.paused ? "▶" : "❚❚"; };
+$("pplay").onclick = () => aud.paused ? playSong() : aud.pause();
+aud.onplay = aud.onpause = syncBtn;
+aud.ontimeupdate = aud.onloadedmetadata = () => {
+  $("pfill").style.width = (aud.duration ? aud.currentTime/aud.duration*100 : 0)+"%";
+  $("ptime").textContent = fmt(aud.currentTime)+" / "+fmt(aud.duration);
+};
+$("pbar").onclick = e => { if(!aud.duration) return; const r=e.currentTarget.getBoundingClientRect(); aud.currentTime=(e.clientX-r.left)/r.width*aud.duration; };
+$("albumBtn").onclick = () => go(1);
+syncBtn();
 
 /* ---------- CREATE: form + preview ---------- */
 if(mode==="create"){
