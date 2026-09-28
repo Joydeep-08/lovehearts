@@ -134,7 +134,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 .pa{top:-24px;left:-8px;transform:rotate(-7deg)}
 .pb{top:-16px;right:-8px;transform:rotate(6deg)}
 .pc{bottom:-22px;right:16px;transform:rotate(-4deg)}
-@media(max-width:700px){.player{padding:12px;gap:12px}.player img{width:72px;height:72px}.pm h3{font-size:20px}.pm small{font-size:14px}.play{width:40px;height:40px}.tm{font-size:12px}
+.cat2{position:absolute;left:14px;bottom:-18px;width:72px;z-index:3;transform:rotate(-6deg)}
+a.btn{display:inline-block;text-decoration:none}
+@media(max-width:700px){.cat2{width:60px}.player{padding:12px;gap:12px}.player img{width:72px;height:72px}.pm h3{font-size:20px}.pm small{font-size:14px}.play{width:40px;height:40px}.tm{font-size:12px}
 .note{--lh:32px;font-size:22px;padding:112px 20px 132px 24px}.note .sig{font-size:30px}.letter2{margin-left:6px;margin-right:6px}.cert-in{padding:26px 14px 22px}.seal{width:52px;height:52px;font-size:9px}}
 </style>
 </head>
@@ -233,7 +235,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
   <div class="letter2">
     <div class="pp pa"><img id="lp0" alt=""></div><div class="pp pb"><img id="lp1" alt=""></div><div class="pp pc"><img id="lp2" alt=""></div>
     <div class="note" id="note"></div>
+    <img class="cat2" id="catImg2" alt="">
   </div>
+  <a class="btn hidden" id="returnBtn" href="https://love-page-ccs.pages.dev/" target="_blank" rel="noopener" style="margin-top:36px">Return her love ♥</a>
   <div class="genbox hidden" id="genbox">
     <button class="btn" id="genBtn">Generate QR &amp; link</button>
     <p>Happy with it? This creates the link you'll send him.</p>
@@ -339,7 +343,7 @@ document.addEventListener("keydown", e => {
 function render(d){
   D = d;
   const ph = (d.photos||[]).concat(DEF).slice(0,3);
-  $("catImg").src = CAT;
+  $("catImg").src = CAT; $("catImg2").src = CAT;
   $("vTitle").textContent = `To ${d.receiver}`;
   $("vRibbon").textContent = `from ${d.sender} ✿`;
   $("vMsg").textContent = "Every year this day comes around and I think the same thing: I got so lucky with you. So instead of a text this time, I built you a tiny corner of the internet. Stay a while, there's a bit to see.";
@@ -351,6 +355,8 @@ function render(d){
   [0,1,2].forEach(i=>$("lp"+i).src = ph[i]);
   $("note").innerHTML = `Hey ${esc(d.receiver)},\n\n${esc(d.message)}\n\nalways yours,\n<span class="sig">${esc(d.sender)}</span>`;
 }
+
+if(mode==="view") $("returnBtn").classList.remove("hidden"); // shared link only, never in the creator preview
 
 /* ---------- MUSIC PLAYER ---------- */
 const fmt = t => isFinite(t) ? Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0") : "0:00";
