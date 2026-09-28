@@ -207,7 +207,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 <section id="pg4" class="page hidden"><div class="sec" style="max-width:640px">
   <p class="eyebrow">OFFICIALLY OFFICIAL</p>
   <h2 class="title sub">the boyfriend certificate</h2>
-  <div class="cert"><div class="cert-in">
+  <div class="cert" id="certBox"><div class="cert-in">
     <div class="seal">OFFICIAL<br>SEAL</div>
     <p class="k">CERTIFICATE OF BOYFRIENDSHIP</p>
     <h2>Certified Boyfriend</h2>
@@ -224,6 +224,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
     </ul>
     <div class="sigs"><div><b id="cFrom"></b><small>issued by</small></div><div><b>the cat</b><small>official witness</small></div></div>
   </div></div>
+  <button class="btn" id="dlCert" style="margin-top:26px">Download certificate ⬇</button>
 </div></section>
 
 <section id="pg5" class="page hidden"><div class="sec" style="max-width:700px">
@@ -274,6 +275,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 </div>
 
 <audio id="aud" src="song.mp3" preload="auto" loop></audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
@@ -340,14 +342,14 @@ function render(d){
   $("catImg").src = CAT;
   $("vTitle").textContent = `To ${d.receiver}`;
   $("vRibbon").textContent = `from ${d.sender} ✿`;
-  $("vMsg").textContent = d.message;
+  $("vMsg").textContent = "Every year this day comes around and I think the same thing: I got so lucky with you. So instead of a text this time, I built you a tiny corner of the internet. Stay a while, there's a bit to see.";
   $("minis").innerHTML = MINI_GIFS.map(u=>`<img src="${esc(u)}" alt="">`).join("");
   $("wall").innerHTML = P.map((u,i)=>`<button class="flip" aria-label="Flip photo ${i+1}"><span class="pin"></span><div><figure><img src="${esc(u)}" alt=""></figure><div class="back">${BACKS[i]}</div></div></button>`).join("");
   document.querySelectorAll(".flip").forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle("on");});
   $("pArt").src = MINI_GIFS[0];
   $("cWho").textContent = d.receiver; $("cFrom").textContent = d.sender; $("cPh").src = ph[0];
   [0,1,2].forEach(i=>$("lp"+i).src = ph[i]);
-  $("note").innerHTML = `Hey ${esc(d.receiver)},\n\nI'm not great at saying this stuff out loud, so I made you a page instead.\n\nI hope today is a good one. And I hope you know that whatever happens next, you've got a person in your corner permanently. That's me.\n\nalways in your corner,\n<span class="sig">${esc(d.sender)}</span>`;
+  $("note").innerHTML = `Hey ${esc(d.receiver)},\n\n${esc(d.message)}\n\nalways yours,\n<span class="sig">${esc(d.sender)}</span>`;
 }
 
 /* ---------- MUSIC PLAYER ---------- */
@@ -361,6 +363,14 @@ aud.ontimeupdate = aud.onloadedmetadata = () => {
 };
 $("pbar").onclick = e => { if(!aud.duration) return; const r=e.currentTarget.getBoundingClientRect(); aud.currentTime=(e.clientX-r.left)/r.width*aud.duration; };
 $("albumBtn").onclick = () => go(1);
+$("dlCert").onclick = async () => {
+  const b = $("dlCert"); b.disabled = true; b.textContent = "Making it…";
+  try{
+    const c = await html2canvas($("certBox"),{scale:2,useCORS:true,backgroundColor:null,onclone:doc=>{doc.getElementById("certBox").style.transform="none";}});
+    const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = "boyfriend-certificate.png"; a.click();
+  }catch(e){ console.error(e); alert("Couldn't save it. A screenshot works too."); }
+  b.disabled = false; b.textContent = "Download certificate ⬇";
+};
 syncBtn();
 
 /* ---------- CREATE: form + preview ---------- */
@@ -435,13 +445,16 @@ async function finalize(payId){
       if(pending.urls[i]) continue;
       const blob = await shrink(files[i]);
       const path = `${pending.sid}/${i}.jpg`;
-      const r = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`,{method:"POST",headers:{...H,"Content-Type":"image/jpeg","x-upsert":"true"},body:blob});
-      if(!r.ok) throw new Error("Photo "+(i+1)+" didn't upload.");
+      const r = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`,{method:"POST",headers:{...H,"Content-Type":"image/jpeg"},body:blob});
+      if(!r.ok){
+        const t = await r.text();
+        if(!/Duplicate|already exists/i.test(t)){ console.error("upload",r.status,t); throw new Error(`Photo ${i+1} failed (${r.status}): ${t.slice(0,160)}`); }
+      }
       pending.urls[i] = `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
     }
     const r = await fetch(`${SB_URL}/rest/v1/${TABLE}`,{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},
       body:JSON.stringify({id:pending.sid,sender:D.sender,receiver:D.receiver,message:D.message,photos:pending.urls,payment_id:pending.payId})});
-    if(!r.ok && r.status!==409) throw new Error("Couldn't save your page.");
+    if(!r.ok && r.status!==409){ const t = await r.text(); console.error("insert",r.status,t); throw new Error(`Couldn't save page (${r.status}): ${t.slice(0,160)}`); }
     pending.done = true;
     const link = `${location.origin}${location.pathname}?id=${pending.sid}`;
     $("shareLink").textContent = link;
