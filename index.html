@@ -127,8 +127,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 .seal{position:absolute;right:10px;top:10px;width:62px;height:62px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-weight:700;font-size:11px;letter-spacing:.05em;transform:rotate(12deg);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--gold);text-align:center;line-height:1.1}
 /* letter with pinned photos */
 .letter2{position:relative;margin-top:44px}
-.note{--lh:40px;position:relative;margin-top:0;padding:120px 28px 140px 40px;line-height:var(--lh);background:#fff repeating-linear-gradient(#fff 0 calc(var(--lh) - 1px),#e3eeea calc(var(--lh) - 1px) var(--lh))}
-.pp{position:absolute;width:min(30vw,132px);background:#fff;padding:6px 6px 20px;box-shadow:0 8px 20px rgba(31,58,68,.22);z-index:2}
+.note{--lh:40px;position:relative;margin-top:0;padding:185px 28px 195px 40px;line-height:var(--lh);background:#fff repeating-linear-gradient(#fff 0 calc(var(--lh) - 1px),#e3eeea calc(var(--lh) - 1px) var(--lh))}
+.pp{position:absolute;width:min(36vw,170px);background:#fff;padding:6px 6px 20px;box-shadow:0 8px 20px rgba(31,58,68,.22);z-index:2}
 .pp img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
 .pp::before{content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--gold);box-shadow:0 2px 4px rgba(0,0,0,.25)}
 .pa{top:-24px;left:-8px;transform:rotate(-7deg)}
@@ -137,7 +137,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--teal)}
 .cat2{position:absolute;left:14px;bottom:-18px;width:72px;z-index:3;transform:rotate(-6deg)}
 a.btn{display:inline-block;text-decoration:none}
 @media(max-width:700px){.cat2{width:60px}.player{padding:12px;gap:12px}.player img{width:72px;height:72px}.pm h3{font-size:20px}.pm small{font-size:14px}.play{width:40px;height:40px}.tm{font-size:12px}
-.note{--lh:32px;font-size:22px;padding:112px 20px 132px 24px}.note .sig{font-size:30px}.letter2{margin-left:6px;margin-right:6px}.cert-in{padding:26px 14px 22px}.seal{width:52px;height:52px;font-size:9px}}
+.note{--lh:32px;font-size:22px;padding:152px 20px 150px 24px}.note .sig{font-size:30px}.letter2{margin-left:6px;margin-right:6px}.cert-in{padding:26px 14px 22px}.seal{width:52px;height:52px;font-size:9px}}
 </style>
 </head>
 <body>
@@ -158,7 +158,7 @@ a.btn{display:inline-block;text-decoration:none}
       <div class="pic"><span>+ photo 2</span><input type="file" accept="image/*"></div>
       <div class="pic"><span>+ photo 3</span><input type="file" accept="image/*"></div>
     </div>
-    <label for="message">Your message</label>
+    <label for="message">Your message <span style="font-weight:400;color:var(--mut)">(optional)</span></label>
     <textarea id="message" rows="4" maxlength="400" placeholder="Every year this day comes around and I think the same thing..."></textarea>
     <div class="err" id="err" role="alert"></div>
     <button class="btn" id="previewBtn" style="width:100%;margin-top:10px">Preview</button>
@@ -302,6 +302,7 @@ const MINI_GIFS = [
   "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ2dTFuNDRqcWxmMDV6ejZ6MHg5MTlqcG9uYm0wN2lkd2wwN2s3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ey9c4OTwlZWCuVafkZ/giphy.gif",
   "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ2dTFuNDRqcWxmMDV6ejZ6MHg5MTlqcG9uYm0wN2lkd2wwN2s3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/tAnKxPsuWqmuBuHD0Y/giphy.gif"
 ];
+const DEFAULT_NOTE = "I'm not great at saying this stuff out loud, so I made you a page instead.\n\nI hope today is a good one. And I hope you know that whatever happens next, you've got a person in your corner permanently. That's me.";
 const P = [1,2,3,4,5,6].map(i=>`p${i}.jpeg`);
 const BACKS = ["the day you became my favourite notification.","this smile is still my weakness.","we were being idiots and it was perfect.","you make boring days feel like weekends.","i'd pick you again. every single time.","to be continued... forever ✿"];
 
@@ -353,7 +354,7 @@ function render(d){
   $("pArt").src = MINI_GIFS[0];
   $("cWho").textContent = d.receiver; $("cFrom").textContent = d.sender; $("cPh").src = ph[0];
   [0,1,2].forEach(i=>$("lp"+i).src = ph[i]);
-  $("note").innerHTML = `Hey ${esc(d.receiver)},\n\n${esc(d.message)}\n\nalways yours,\n<span class="sig">${esc(d.sender)}</span>`;
+  $("note").innerHTML = `Hey ${esc(d.receiver)},\n\n${esc(d.message || DEFAULT_NOTE)}\n\nalways yours,\n<span class="sig">${esc(d.sender)}</span>`;
 }
 
 if(mode==="view") $("returnBtn").classList.remove("hidden"); // shared link only, never in the creator preview
@@ -391,7 +392,6 @@ if(mode==="create"){
     const sender=$("sender").value.trim(), receiver=$("receiver").value.trim(), message=$("message").value.trim();
     if(!sender||!receiver) return $("err").textContent="Add both names.";
     if(files.some(f=>!f)) return $("err").textContent="Add all 3 photos.";
-    if(!message) return $("err").textContent="Write a short message.";
     $("err").textContent="";
     if(pending && !pending.done) pending.urls=[]; // retry re-uploads the latest photos
     render({sender,receiver,message,photos:files.map(f=>URL.createObjectURL(f))});
