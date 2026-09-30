@@ -464,7 +464,7 @@ async function finalize(payId){
     pending.done = true;
     const link = `${location.origin}${location.pathname}?id=${pending.sid}`;
     $("shareLink").textContent = link;
-    $("qr").innerHTML = ""; new QRCode($("qr"),{text:link,width:200,height:200});
+    $("qr").innerHTML = ""; $("qr").appendChild(await drawCuteQR(link, D.receiver));
     $("copyBtn").onclick = () => { navigator.clipboard.writeText(link); $("copyBtn").textContent="Copied"; };
     $("dlBtn").onclick = () => { const c=$("qr").querySelector("canvas"); const a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="boyfriends-day-qr.png"; a.click(); };
     setState("sDone");
@@ -483,6 +483,83 @@ function shrink(file,max=1100){
     img.onerror=()=>rej(new Error("Couldn't read an image."));
     img.src=URL.createObjectURL(file);
   });
+}
+  /* ---------- CUTE QR ---------- */
+async function drawCuteQR(text, receiver){
+  try{ await document.fonts.load("600 40px Caveat"); }catch(e){}
+  const tmp = document.createElement("div");
+  const qr = new QRCode(tmp,{text,width:64,height:64,correctLevel:QRCode.CorrectLevel.H});
+  const M = qr._oQRCode, n = M.getModuleCount();
+
+  const S=2, W=360, HT=470;
+  const c = document.createElement("canvas"); c.width=W*S; c.height=HT*S;
+  const x = c.getContext("2d"); x.scale(S,S);
+  const TEAL="#3f9482", TEALD="#2b6f60", INK="#1f3a44", GOLD="#e8a44e", PEACH="#e07a5f", MINT="#cfe6df";
+
+  const rr=(px,py,w,h,r)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();};
+  const heart=(cx,cy,s,col)=>{x.beginPath();x.moveTo(cx,cy+s*.4);
+    x.bezierCurveTo(cx-s*.7,cy-s*.05,cx-s*.35,cy-s*.6,cx,cy-s*.2);
+    x.bezierCurveTo(cx+s*.35,cy-s*.6,cx+s*.7,cy-s*.05,cx,cy+s*.4);
+    x.fillStyle=col;x.fill();};
+
+  // background + polka dots
+  rr(0,0,W,HT,28); x.fillStyle="#eaf4f0"; x.fill();
+  x.save(); x.clip();
+  x.fillStyle="rgba(63,148,130,.10)";
+  for(let yy=10;yy<HT;yy+=28) for(let xx=((yy/28)%2?24:10);xx<W;xx+=28){x.beginPath();x.arc(xx,yy,3,0,7);x.fill();}
+  x.restore();
+  // dashed gold border
+  x.setLineDash([8,7]); x.lineWidth=2.5; x.strokeStyle=GOLD; rr(10,10,W-20,HT-20,22); x.stroke(); x.setLineDash([]);
+
+  // title
+  x.textAlign="center"; x.fillStyle=TEALD; x.font="600 42px Caveat, cursive";
+  x.fillText("scan me ✿",W/2,62);
+
+  // white panel w/ shadow
+  const px=30, py=82, pw=300;
+  x.save(); x.shadowColor="rgba(31,58,68,.18)"; x.shadowBlur=22; x.shadowOffsetY=8;
+  rr(px,py,pw,pw,28); x.fillStyle="#fff"; x.fill(); x.restore();
+
+  // tape pieces
+  [[px+18,py-4,-28],[px+pw-18,py-4,28]].forEach(([tx,ty,a])=>{
+    x.save(); x.translate(tx,ty); x.rotate(a*Math.PI/180);
+    x.fillStyle="rgba(232,164,78,.55)"; x.fillRect(-32,-11,64,22); x.restore();
+  });
+
+  // modules
+  const area=pw-44, m=area/n, ox=px+22, oy=py+22;
+  const cx=ox+area/2, cy=oy+area/2, clear=34;
+  const inFinder=(r,cc)=>(r<8&&cc<8)||(r<8&&cc>=n-8)||(r>=n-8&&cc<8);
+  x.fillStyle=TEALD;
+  for(let r=0;r<n;r++) for(let cc=0;cc<n;cc++){
+    if(!M.isDark(r,cc)||inFinder(r,cc)) continue;
+    const mx=ox+cc*m+m/2, my=oy+r*m+m/2;
+    if(Math.hypot(mx-cx,my-cy)<clear) continue;
+    x.beginPath(); x.arc(mx,my,m*.44,0,7); x.fill();
+  }
+  // finder eyes
+  [[0,0],[0,n-7],[n-7,0]].forEach(([r,cc])=>{
+    const ex=ox+cc*m, ey=oy+r*m;
+    x.lineWidth=m; x.strokeStyle=TEALD; rr(ex+m/2,ey+m/2,6*m,6*m,m*2.1); x.stroke();
+    rr(ex+2*m,ey+2*m,3*m,3*m,m*1.1); x.fillStyle=INK; x.fill();
+  });
+
+  // heart badge
+  x.beginPath(); x.arc(cx,cy,27,0,7); x.fillStyle="#fff"; x.fill();
+  x.lineWidth=3; x.strokeStyle=GOLD; x.stroke();
+  heart(cx,cy+2,30,PEACH);
+
+  // caption
+  x.fillStyle=INK; x.font="600 30px Caveat, cursive";
+  x.fillText("a little something for "+receiver,W/2,py+pw+48);
+  x.fillStyle="#5b7480"; x.font="600 22px Caveat, cursive";
+  x.fillText("made with ♥",W/2,py+pw+78);
+  // sprinkles
+  heart(34,HT-36,14,PEACH); heart(W-34,HT-36,14,TEAL);
+  x.fillStyle=GOLD; x.font="22px serif"; x.fillText("✿",W-30,52); x.fillText("✿",30,52);
+
+  c.style.cssText="width:100%;max-width:300px;height:auto;border-radius:20px;box-shadow:0 10px 26px rgba(31,58,68,.15)";
+  return c;
 }
 </script>
 </body>
